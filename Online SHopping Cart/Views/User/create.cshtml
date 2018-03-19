@@ -1,0 +1,179 @@
+﻿@model Online_SHopping_Cart.Models.User_Table
+
+@{
+    ViewBag.Title = "create";
+    Layout = null;
+}
+
+
+<style>
+    .wrapper {
+        margin-left: 550px;
+        width: 300px;
+        height: 400px;
+        text-align: center;
+    }
+</style>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="~/Content/materialize.css" rel="stylesheet" />
+<script src="~/scripts/jquery-1.10.2.js"></script>
+<script src="~/scripts/materialize.js"></script>
+<body style="background-image:url('../../Images/back1.jpg')">
+
+    <div class="wrapper">
+        <h3 style="color:#80cbc4">Register</h3>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="col s6">
+
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div style="text-align:left">
+                    <div >
+                       <label>Choose Role</label>
+                            @Html.DropDownListFor(model => model.Roleid, (IEnumerable<SelectListItem>)ViewBag.rolename, htmlAttributes: new { @class = "dropdown-button btn" })
+                    </div>
+                </div>
+              
+                <div class="input-field col s8">
+                    <i class="material-icons prefix">person_outline</i>
+                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "validate" } })
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    <label>First Name</label>
+                </div>
+
+                
+
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">person_outline</i>
+                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "validate" } })
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    <label>Last Name</label>
+                </div>
+
+               
+
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">email</i>
+                    @Html.EditorFor(model => model.UserEmail, new { htmlAttributes = new { @class = "validate" } })
+                    @Html.ValidationMessageFor(model => model.UserEmail, "", new { @class = "text-danger" })
+                    <label>User Email</label>
+                </div>
+
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">phone</i>
+                    @Html.EditorFor(model => model.UserPhno, new { htmlAttributes = new { @class = "validate" } })
+                    @Html.ValidationMessageFor(model => model.UserPhno, "", new { @class = "text-danger" })
+                    <label>Phone Number</label>
+                </div>
+
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">account_circle</i>
+                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "validate" } })
+                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                    <label>User Name</label>
+                </div>
+               
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">lock_outline</i>
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "validate",@id="pass" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    <label>Password</label>
+                </div>
+
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">lock_outline</i>
+                    <input type="password" name="Confirmpassword" id="cp" class="validate">
+                    <label>Confirm Password</label>
+                </div>
+                <div id="msg">
+
+                </div>
+
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">location_on</i>
+                    @Html.EditorFor(model => model.UserAddress, new { htmlAttributes = new { @class = "validate" } })
+                    @Html.ValidationMessageFor(model => model.UserAddress, "", new { @class = "text-danger" })
+                    <label>User Address</label>
+                </div>
+                <div>
+                    <button class="btn waves-effect waves-light" type="submit">
+                        Register
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+
+                
+            </div>
+        }
+
+        <div>
+            <p>Already a User <a href="login">Sign IN Here</a></p>
+            <p>Please Read the<a class="modal-trigger" href="#modal1">*Terms and Conditions</a></p>
+        </div>
+
+    </div>
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Terms and Conditions</h4>
+            <p>Your Credentials will be active after getting conformation from Admin</p>
+            <p>*Condition does not apply for Buyers</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+        </div>
+    </div>
+
+    
+</body>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/scripts/materialize.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $("#cp").change(function () {
+
+            var pass = $('#pass').val();
+            var cp = $('#cp').val();
+            $.ajax({
+                type: "post",
+                url: "/User/confirm_pass",
+                data: { pass: pass, cp: cp },
+                datatype: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        $("#msg").hide();
+                    }
+                    else {
+                        
+                        $("#pass").val("");
+                        $("#cp").val("");
+                        $('#msg').html('<p>Password Do Not Match</h6>')
+                    }
+
+                }
+
+
+            });
+
+        });
+        $('.modal').modal({
+            dismissible: true, // Modal can be dismissed by clicking outside of the modal
+            opacity: .5, // Opacity of modal background
+            inDuration: 300, // Transition in duration
+            outDuration: 200, // Transition out duration
+            startingTop: '4%', // Starting top style attribute
+            endingTop: '10%', // Ending top style attribute
+            
+        }
+      );
+
+    });
+
+</script>

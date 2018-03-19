@@ -1,0 +1,223 @@
+﻿@{
+
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <style>
+        .navbar {
+            background: #000080;
+            border: black;
+            height: 55px;
+        }
+
+            .navbar #navcol {
+                color: white;
+                font-size: 20px;
+            }
+
+                .navbar #navcol:hover {
+                    /*//color: black;*/
+                    font-size: 23px;
+                }
+
+            .navbar #logo {
+                color: white;
+            }
+
+                .navbar #logo:hover {
+                    /*color: black;*/
+                    /*font-size:5px;*/
+                }
+
+        .body {
+            transition: background-color .5s;
+            font-family: "Lato", sans-serif;
+        }
+
+        .dropdown-menu {
+            background: transparent;
+        }
+
+            .dropdown-menu li:hover {
+                font-size: large;
+            }
+
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+            .sidenav a {
+                padding: 8px 8px 8px 32px;
+                text-decoration: none;
+                font-size: 22px;
+                color: black;
+                display: block;
+                transition: 0.3s;
+            }
+
+                .sidenav a:hover {
+                    font-size: 25px;
+                }
+
+            .sidenav .closebtn {
+                position: absolute;
+                top: 0;
+                right: 25px;
+                font-size: 36px;
+                margin-left: 50px;
+            }
+
+        #mains {
+            background-color: #D7DBDD;
+            transition: margin-left .5s;
+            padding: 16px;
+        }
+
+        @@media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+                .sidenav a {
+                    font-size: 18px;
+                }
+        }
+
+        .badge-notify {
+            background: red;
+            position: relative;
+            top: -10px;
+            left: -3px;
+        }
+    </style>
+</head>
+<body style="padding:0px;" id="mains">
+
+
+    <nav class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" id="logo" href="/Seller/Index" style="font-size:35px;">shopFactory</a>
+            </div>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="navcol" data-toggle="dropdown">Products <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/Seller/Create">Manage Product</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/Seller/display">View Products</a></li>
+
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a id="navcol" class="dropdown-toggle count " data-toggle="dropdown"><span class="glyphicon glyphicon-bell "><span class="badge badge-notify">@Convert.ToInt32(Session["notif-count"])</span></span></a>
+                    <ul class="dropdown-menu">
+                        @foreach (var item in ViewBag.sellernotification)
+                        {
+                            <li>@item Sold</li>
+                            <li class="divider"></li>
+                        }
+
+                        <li><a href="/Seller/Notification">See All</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a id="navcol">
+                        <span style="cursor:pointer;" onclick="openNav()">
+                            <span class="glyphicon glyphicon-user ">  </span>
+                        </span>
+                        @*@Html.ActionLink(Session["user"].ToString(), "", "", new { area = "" }, new { @class = "navbar-brand ", @id = "sidebarCollapse" })*@
+                    </a>
+                </li>
+            </ul>
+            <div id="mySidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <img src="~/Images/user.png" style="height:150px;width:150px;" />
+                <a href="/Seller/profile">
+                    <span class="glyphicon glyphicon-edit ">  </span>
+                    Edit Profile
+                </a>
+                <a href="/Seller/ChangePassword">
+                    <span class="glyphicon glyphicon-cog">  </span>
+                    ChangePassword
+                </a>
+                @*@Html.ActionLink("Edit Profile", "profile", new { @class = "glyphicons glyphicons - edit" })*@
+                <a href="/Seller/Logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <script>
+        $('ul.nav li.dropdown').hover(function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+        }, function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+        });
+
+function openNav() {
+    document.getElementById("mySidenav").style.width = "270px";
+
+    document.body.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
+}
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+
+    document.body.style.backgroundColor = "#D7DBDD";
+}
+
+$(".count").click(function(e){
+
+    e.preventDefault();
+    $.ajax({
+
+        url: "/Seller/DisableNotification", // comma here instead of semicolon
+        success: function(){
+
+        }
+
+    });
+
+});
+
+    </script>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+    @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>*@
+</body>
+</html>

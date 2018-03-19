@@ -1,0 +1,35 @@
+﻿@model Online_SHopping_Cart.ViewModel.Buyer_Product
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+<script src="~/scripts/productsPartialView.js"></script>
+
+<input type="checkbox" id="selectAll" />
+
+<label>Select All</label><br /><br />
+
+<div id="checkboxes">
+    @foreach (var item in ViewBag.ProductList)
+    {
+        var image = Convert.ToBase64String(item.BinaryImage);
+        var src = "data:image/png;base64," + image;
+
+        <div id="box">
+            <input id="chk@(item.ProductId)"
+                   type="checkbox"
+                   value="@item.ProductId"
+                   name="productIds" />
+            <img src="@src" style="width:150px; height:150px;" onclick="ZoomImage(@item.ProductId)" /><br />
+            <label>@item.ProductName</label><br />
+            <label>@item.ProductPrice</label><br />
+            <label>@item.ProductDesc</label>
+        </div>
+
+    }
+</div>
+<div id="popupdiv" style="display: none">
+
+</div>
+

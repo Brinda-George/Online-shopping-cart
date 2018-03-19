@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Online_SHopping_Cart.ViewModel.OrderHistory_ViewModel>
+
+<link href="~/Content/ServiceStyleSheet.css" rel="stylesheet" />
+
+@Html.Label("Customer Details")
+@foreach (var item in ViewBag.list)
+{
+    <div>
+        @Html.Raw(item)<br />
+    </div>
+}
+<br />
+@Html.Label("Purchase Details")<br />
+@foreach (var item in Model)
+{
+    var image = Convert.ToBase64String(item.BinaryImage);
+    var src = "data:image/png;base64," + image;
+    <div id="main-wrap">
+        <div id="sidebar">
+            <img src="@src" style="width:150px; height:150px;" /><br />
+        </div>
+        <div id="content-wrap">
+            @Html.Label("Product Name:")
+            @Html.Raw(item.ProductName)<br />
+            @Html.Label("Product Description:")
+            @Html.Raw(item.ProductDesc)<br />
+            @Html.Label("Amount:")
+            @Html.Raw(String.Format("{0:0.00}", (decimal)(item.Amount)))<br />
+        </div>
+    </div>
+    <br /><br /><br />
+
+}

@@ -1,0 +1,150 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+   
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/Content/materialize.css" rel="stylesheet" />
+    <link href="~/Content/materialize-social.css" rel="stylesheet" />
+</head>
+<body style="padding:0px;margin:0px;">
+    
+    <nav>
+        <div class="nav-wrapper">
+            <ul id="nav-mobile" class="left hide-on-med-and-down">
+                <li style="cursor:pointer;"><h4 id="menu">shopFactory</h4></li>
+                </ul>
+                <ul id="nav-mobile" class="left hide-on-med-and-down">
+                    
+                    <li>@Html.ActionLink("Home", "Index")</li>
+                    <li>@Html.ActionLink("Notification", "notification")</li>
+                    <li>@Html.ActionLink("Order", "OrderHistoryList")</li>
+                </ul>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    @if (Session["count"] != null)
+            {
+                        <li>@Html.ActionLink("Cart(" + @Session["count"].ToString()+ ")", "cart")</li>
+                    }
+                    else
+                    {
+                        Response.Redirect("User/login");
+                    }
+
+                    @if (Session["user"] != null)
+                    {
+                        <li data-activates="slide-out" class="button-collapse" style="cursor:pointer" >Welcome : @Session["user"].ToString() </li>
+                        
+                        @*<li >Profile</li>*@
+                    }
+                    else
+                    {
+                        Response.Redirect("~/User/login");
+                    }
+                    
+                </ul>
+</div>
+    </nav>
+
+        <ul id="slide-out" class="side-nav">
+            <li>
+                <div class="user-view" style="height:300px;">
+                    <div class="background">
+                        <img src="~/Images/profile.png">
+                    </div>
+                </div>
+            </li>
+            <li><a class="waves-effect" href="#!">NAME : @Session["name"].ToString()</a> </li>
+            <li><a class="waves-effect" href="#!">UserName : @Session["user"].ToString()</a> </li>
+
+            <li><div class="divider"></div></li>
+            <li>
+                <div class="chip">
+                    @Html.ActionLink("EDIT PROFILE", "profile")
+                    <i class="material-icons"> account_circle</i>
+                </div>
+            </li>
+            <li>
+                <div class="chip">
+                    @Html.ActionLink("CHANGE PASSWORD", "ChangePassword")
+                    <i class="material-icons"> edit</i>
+                </div>
+            </li>
+            <li>
+                <div class="chip">
+                    @Html.ActionLink("LOGOUT", "logout")
+                    <i class="material-icons"> backspace</i>
+                </div>
+            </li>
+
+        </ul>
+
+
+        <div>
+
+            <!-- Tap Target Structure -->
+            <div class="tap-target" data-activates="menu">
+                <div class="tap-target-content">
+                    <div>
+                        <p>Contact Us</p>
+                        <p><i class="material-icons prefix">email</i>factoryforshop@gmail.com</p>
+                    </div>
+                    <div class="row">
+                        <p>Keep In Touch</p>
+                        <a class="waves-effect waves-light btn-floating social google">
+                            <i class="fa fa-google"></i> Sign in with google
+                        </a>
+                        <a class="waves-effect waves-light btn-floating social twitter">
+                            <i class="fa fa-twitter"></i> Sign in with twitter
+                        </a>
+                        <a class="waves-effect waves-light btn-floating social facebook">
+                            <i class="fa fa-facebook"></i> Sign in with facebook
+                        </a>
+                        <a class="waves-effect waves-light btn-floating social linkedin">
+                            <i class="fa fa-linkedin"></i> Sign in with linkedin
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            @RenderBody()
+
+        </div>
+
+
+</body>
+</html>
+<script src="~/Scripts/modernizr-2.6.2.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/scripts/materialize.js"></script>
+<script>
+    
+     $('.button-collapse').sideNav({
+         menuWidth: 300, // Default is 300
+         edge: 'right', // Choose the horizontal origin
+         closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+         draggable: true, // Choose whether you can drag to open on touch screens,
+
+    }
+  );
+     $(document).ready(function () {
+         $("#menu").click(function () {
+             $('.tap-target').tapTarget('open');
+
+         })
+
+
+        
+
+     });
+</script>

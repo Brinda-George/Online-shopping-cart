@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "Manage_Service";
+    Layout = "~/Views/Shared/_ServiceLayout.cshtml";
+}
+<script src="~/scripts/jquery-1.10.2.min.js"></script>
+<script src="~/scripts/jquery.validate.min.js"></script>
+<script src="~/scripts/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/jquery-ui.js" type="text/javascript"></script>
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/themes/blitzer/jquery-ui.css"
+      rel="stylesheet" type="text/css" />
+<link href="~/Content/ServiceStyleSheet.css" rel="stylesheet" />
+<script src="~/scripts/manageService.js"></script>
+<br /><br /><br /><br /><br />
+<div id="ajaxgrid" class="container">
+    <h2>Manage Service</h2>
+    @{
+        var gridview = new WebGrid(ViewBag.Services, ajaxUpdateContainerId: "ajaxgrid", rowsPerPage: 7);
+    }
+    @gridview.GetHtml(
+       tableStyle: "webGrid", headerStyle: "header", alternatingRowStyle: "altColor", selectedRowStyle: "clickable",
+    columns: new[]
+    {   gridview.Column(columnName:"ServiceName", header: "Service Name",format: @<span>
+        <span id="ServiceName" class="read">@item.ServiceName</span>
+        @Html.TextBox("txtServiceName", (string)item.ServiceName, new { @class = "edit",@style="display:none" })
+        <label id="label1" class="text-danger"></label>
+        </span>),
+        gridview.Column(columnName:"DeliveryCharge", header: "Delivery Charge",format: @<span>
+        <span id="DeliveryCharge" class="read">@String.Format("{0:0.00}", (decimal)(item.DeliveryCharge))</span>
+        @Html.TextBox("txtDeliveryCharge", (decimal)item.DeliveryCharge, new { @class = "edit" ,@style="display:none" })
+        <label id="label2" class="text-danger"></label>
+        </span>),
+        gridview.Column(columnName: "ServiceDesc", header: " Service Description", format: @<span>
+        <span id="ServiceDesc" class="read">@item.ServiceDesc</span>
+        @Html.TextBox("txtServiceDesc", (string)item.ServiceDesc, new { @class = "edit",@style="display:none" })
+        <label id="label3" class="text-danger"></label>
+        </span> ),
+         gridview.Column(columnName: "LocationName", header: "Available Locations", format: @<span>
+        <span id="LocationName" class="unread">@item.LocationName</span>
+        </span> ),
+        gridview.Column(columnName: "ProductName", header: "Produtcs", format: @<span>
+        <span id="ProductName" class="unread">@item.ProductName</span>
+        </span> ), gridview.Column("", style: "button",
+        format:
+                @<text>
+                    <button class="edit-case read btn btn-default btn-sm" id="@item.ServiceId"><span class="glyphicon glyphicon-pencil"></span>EDIT</button>
+                    <button class="delete-case read btn btn-default btn-sm" id="@item.ServiceId">
+                        <span class="glyphicon glyphicon-trash"></span>  DELETE
+                    </button>
+                    <button class="update-case edit btn btn-default btn-sm" id="@item.ServiceId" style="display:none;">UPDATE</button>
+                    <button class="cancel-case edit btn btn-default btn-sm" id="@item.ServiceId">CANCEL</button>
+                </text>),
+
+    }
+)
+</div>
+
+
+

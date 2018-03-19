@@ -1,0 +1,308 @@
+﻿@model Online_SHopping_Cart.ViewModel.Book
+@{
+    ViewBag.Title = "order";
+    Layout = "~/Views/Shared/_BuyerLayout.cshtml";
+}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+@*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />*@
+<style>
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        width: 20%;
+        border-radius: 5px;
+        float:left;
+        margin-left:20px;
+        margin-bottom:10px;
+    }
+    .box{
+    width:100%;
+    height:200px;
+}
+    #myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 50px;
+    width: auto; /* Full width */
+    height: auto; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 30%;
+    max-width: 700px;
+}
+
+/* Add Animation */
+.modal-content, #caption {    
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+}
+
+@@keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@@media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+}
+
+
+    .disp{
+      background-color:#9f9ea3;
+  
+    }
+    .active {
+    	background-color: blue;
+    }
+</style>
+<div >
+
+    <link href="~/Content/materialize.css" rel="stylesheet" />
+  
+
+    <h5>@Html.DisplayFor(modelItem => modelItem.ProductName)</h5>
+    <br /><br />
+    <div class="col-sm-12">
+        @foreach (var item in ViewBag.image_list)
+        {
+            var base64 = Convert.ToBase64String(item.BinaryImage);
+            var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
+            <div class="card">
+                <img class="box" src="@imgSrc" id=@(item.ImageId) onclick="zoom(this)" /><br />
+            </div>
+        }
+    </div>
+    <div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+
+</div>
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><hr />
+<div class="row">
+    <div class="col s3">
+        <h5> @Html.DisplayFor(modelItem => modelItem.ProductName)</h5>
+        <h4>Discreption</h4>
+        <h5> @Html.DisplayFor(modelItem => modelItem.ProductDesc)</h5>
+        <h5>Price : @Html.DisplayFor(modelItem => modelItem.ProductPrice)</h5>
+        <h5>Stock : @Html.DisplayFor(modelItem => modelItem.ProductStock)</h5>
+        @if (Model.ProductStock == 0)
+            {
+            <h3 style="color:red">Out of Stock</h3>
+        }
+    </div>
+
+    <div class="col s4">
+        <p id="no_msg" style="color:red;">Sorry no Service Provide available to currect Location</p>
+        <p id="valid_info" style="color:red;">Please select Location and Service Provide</p>
+        <p id="stock_msg" style="color:red;">Sorry Stock Not Available</p>
+        <p id="d_add" style="color:red;">Enter Delivery Address</p>
+        <h6>Booking Details</h6>
+        <form method="post" action="/Buyer/order">
+
+            <h6>Location</h6>
+            @Html.DropDownList("place", (IEnumerable<SelectListItem>)ViewBag.location_list, "--Select--", htmlAttributes: new { @class = "dropdown-button btn", id = "ddlbcat" })
+            <br />
+            <h6>Service Provide</h6>
+            @Html.DropDownListFor(model => model.UserId, new List<SelectListItem>(), "--Select--", htmlAttributes: new { @class = "dropdown-button btn", id = "ddlpcat" })
+            <br />
+            <h6>Delivery Address</h6>
+            @Html.TextAreaFor(model => model.OrderDelivryAddress, new { htmlAttributes = new { @id = "address" } })
+            <br />
+            <h6>Quantity</h6>
+            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" ,@id="qty",@min="0" } })
+            <input type="hidden" value="" name="amt" id="amt" />
+            <div id="tamt">
+
+            </div>
+            <div id="order_btn">
+                @if (Model.ProductStock != 0)
+            {
+                    <button type="submit" class="btn waves-effect waves-light">
+                        BOOK
+                    </button>
+                }
+            </div>
+        </form>
+    </div>
+    <div class="col s4">
+        <div id="dvMap" style="width: 600px; height: 350px">
+
+        </div>
+    </div>
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1V0ctVqyVwcbQXzT6xXDk6rUKpocVFGg&callback=myMap"></script>
+<script src="~/scripts/jquery-1.10.2.min.js"></script>
+<script src="~/scripts/materialize.js"></script>
+<script>
+
+    function zoom(element)
+    {
+        var modal = document.getElementById('myModal');
+
+        // Get the image and insert it inside the modal - use its "alt" text as a caption
+        var img =element.id;
+        var modalImg = document.getElementById("img01");
+    
+        modal.style.display = "block";
+        modalImg.src = element.src;             
+        
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+    }
+
+    $(document).ready(function () {
+        $("#no_msg").hide();
+        $("#d_add").hide();
+        $("#stock_msg").hide();
+        $("#order_btn").hide();
+        $("#valid_info").hide();
+        $('#ddlbcat').change(function () {
+            $.ajax({
+                type: "post",
+                url: "/Buyer/service_name",
+                data: { id: $('#ddlbcat').val() },
+                datatype: "json",
+
+                success: function (data) {
+                    if (data.length > 0) {
+                    $("#no_msg").hide();
+                    var category = "<select id='ddlpcat'>";
+                    category = category + '<option value="">--Select--</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        category = category + '<option value=' + data[i].Value + '>' + data[i].Text + '</option>';
+                    }
+                    category = category + '</select>';
+                    $('#ddlpcat').html(category);
+                    }
+                    else {
+                        $("#no_msg").show();
+                    }
+                }
+            });
+        });
+
+        $('#qty').change(function () {
+            var qty = $('#qty').val();
+            var service_id = $('#ddlpcat').val();
+            //var del_address = $('#address').text();
+            if(qty<1)
+            {
+                $("#order_btn").hide();
+            }
+            if (service_id != 0) {
+                    $("#valid_info").hide();
+                $.ajax({
+                    type: "post",
+                    url: "/Buyer/calculate_amt",
+                    data: { qty: qty, service_id: service_id },
+                    datatype: "json",
+                    success: function (data) {
+                        if (data == 0) {
+                            $("#stock_msg").show();
+                            $("#order_btn").hide();
+                        }
+                        else {
+                            $("#stock_msg").hide();
+                            var total_amt = data.total;
+                            $("#amt").val(total_amt);
+                            $('#tamt').html('<h6>Total Amount : ' + total_amt + '</h6><h6>Devilery Charge : ' + data.del_charge + '</h6>')
+                            $("#order_btn").show();
+
+                        }
+
+                    }
+
+
+                });
+            }
+            else {
+                $("#valid_info").show();
+                $("#order_btn").hide();
+            }
+        })
+
+
+
+
+    });
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (p) {
+            var LatLng = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+            var mapOptions = {
+                center: LatLng,
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+            var marker = new google.maps.Marker({
+                position: LatLng,
+                map: map,
+                title: "<div style = 'height:60px;width:200px'><b>Your location:</b><br />Latitude: " + p.coords.latitude + "<br />Longitude: " + p.coords.longitude
+            });
+            google.maps.event.addListener(marker, "click", function (e) {
+                var infoWindow = new google.maps.InfoWindow();
+                infoWindow.setContent(marker.title);
+                infoWindow.open(map, marker);
+            });
+        });
+    } else {
+        alert('Geo Location feature is not supported in this browser.');
+    }
+   
+</script>

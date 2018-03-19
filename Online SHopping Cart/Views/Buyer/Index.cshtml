@@ -1,0 +1,238 @@
+﻿@model List<Online_SHopping_Cart.Models.BaseCategory_Table>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_BuyerLayout.cshtml";
+    WebGrid grid = new WebGrid(source: ViewBag.list);
+}
+<style>
+  .mySlides{
+      display:none;
+        width:100%;
+      height:700px;
+  }
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        width: 100%;
+        border-radius: 5px;
+        /*background-image: url('http://www.webdesigndev.com/wp-content/uploads/2015/02/7-Halftone-Textures.jpg');*/
+        text-align: center;
+    }
+    .card1 {
+        text-align:center;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        width: 100%;
+        margin-left:35px;
+        margin-top:20px;
+        margin-bottom:20px;
+        font-size:larger;
+        background-color:white;
+        
+    }
+    .sl{
+        height:200px;
+        
+    }
+    #cr {
+        height: 300px;
+        width: 300px;
+        margin: 25px;
+        float: left;
+    }
+</style>
+
+<link href="~/Content/materialize.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="row">
+    <div class="col s1">
+        @if (ViewBag.stock_list != null)
+        {
+           <a class='dropdown-button btn' href='#' data-activates='dropdown1'>In Stock</a>
+
+            <ul id='dropdown1' class='dropdown-content'>
+                @foreach (var item in ViewBag.stock_list)
+                {
+                    <li><a href="#!">@item is Available</a></li>
+                }
+               
+                
+            </ul>
+        }
+        
+    </div>
+    <div class="col s3"></div>
+    <div class="input-field col s4">
+        <input id="cont" type="text" class="validate" placeholder="search by category, brand, product">
+        <a class="btn-floating btn-large waves-effect waves-light red" id="search"><i class="material-icons">search</i></a>
+    </div>
+</div>
+
+
+<div class="col s12" >
+    <div class="card">
+        <img class="mySlides" src="~/Images/pixel.jpg" style="width:100%">
+        <img class="mySlides" src="~/Images/homeappl.jpg" style="width:100%">
+        <img class="mySlides" src="~/Images/wow.jpg" style="width:100%">
+        <script>
+var slideIndex = 0;
+carousel();
+
+function carousel() {
+    var i;
+    var x = document.getElementsByClassName("mySlides");
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";
+    }
+    slideIndex++;
+    if (slideIndex > x.length) {slideIndex = 1}
+    x[slideIndex-1].style.display = "block";
+    setTimeout(carousel, 2000);
+}
+        </script>
+    </div>
+</div>
+<br /><br />
+
+    <div style="margin-left:10%;">
+        @foreach (var item in Model)
+        {
+            <button id=@(item.BaseCatId) class="btn waves-effect waves-light" onclick="cato(this)">@(item.BaseCatName)</button>
+        }
+    </div>
+<br /><br />
+<div class="row">
+    <div class="col s3"> 
+        <div class="carousel">
+            <a class="carousel-item" ><img src="~/Images/sl1.jpg" class="sl"></a>
+            <a class="carousel-item" ><img src="~/Images/sl2.jpg" class="sl"></a>
+            <a class="carousel-item" ><img src="~/Images/sl3.jpg" class="sl"></a>
+            <a class="carousel-item" ><img src="~/Images/sl4.jpg" class="sl"></a>
+            <a class="carousel-item" ><img src="~/Images/sl5.jpg" class="sl"></a>
+        </div>
+    </div>
+
+    <div class="col 7 z-depth-4" style="height: 450px;text-align:center ">
+        <h5>NEW ARRIVALS</h5>
+        <div>
+         @foreach (var item1 in ViewBag.newpro)
+         {
+             var base64 = Convert.ToBase64String(item1.BinaryImage);
+             var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
+
+
+            <div class="card" id="cr">
+                <div class="card-image waves-effect waves-block waves-light">
+                    <img class="activator" style="height:200px;" src="@imgSrc" /><br />
+                </div>
+
+                <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">@Html.Raw(item1.ProductName)<i class="material-icons right">more_vert</i></span>
+                </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">@Html.Raw(item1.ProductName)<i class="material-icons right">close</i></span>
+                    @Html.Raw(item1.ProductName)<br />
+
+                    @Html.Raw(item1.ProductPrice)<br />
+
+                    @Html.Raw(item1.ProductDesc)<br />
+
+                    @Html.ActionLink("View", "order", new { id = item1.ProductId }, new { @class = "btn waves-effect waves-light" })
+                    <br /><br />
+                    <button id=@(item1.ProductId) class="btn waves-effect waves-light" onclick="cart(this)">Add to Cart </button>
+                    <br />
+                </div>
+            </div>
+
+         }
+        </div>
+
+    </div>
+
+</div>
+<script src="~/scripts/jquery-1.10.2.js"></script>
+<script src="~/scripts/materialize.js"></script>
+<script>
+    function cato(element) {
+        var btn = element.id;
+        $.ajax({
+            type: "POST",
+            url: "find_base_cat_id",
+            data: '{id: "' + btn + '" }',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                window.location.href = data.Url;
+            },
+            failure: function (response) {
+                alert("Not found");
+            },
+            error: function (response) {
+                alert("error");
+            }
+        });
+
+    }
+
+    function cart(element) {
+        var btn = element.id;
+        $.ajax({
+            type: "POST",
+            url: "add_cart",
+            data: '{id: "' + btn + '" }',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                alert("Added to Cart");
+                window.location.href = "Index";
+            },
+            failure: function (response) {
+                alert("Not found");
+            },
+            error: function (response) {
+                alert("error");
+            }
+        });
+
+    }
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrainWidth: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left', // Displays dropdown with edge aligned to the left of button
+        stopPropagation: false // Stops event propagation
+    }
+  );
+
+    $(document).ready(function () {
+        $('.carousel').carousel();
+
+        $("#search").click(function () {
+            var name = $("#cont").val();
+            $.ajax({
+                type: "POST",
+                url: "search",
+                data: '{name: "' + name + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data.res == 1) {
+                        window.location.href = data.Url;
+                    }
+                },
+                failure: function (response) {
+                    alert("Not found");
+                },
+                error: function (response) {
+                    alert("error");
+                }
+            });
+
+
+        });
+    });
+</script>

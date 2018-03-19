@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Online_SHopping_Cart.ViewModel.OrderHistory_ViewModel>
+
+@{
+    ViewBag.Title = "OrderHistoryDetails";
+    Layout = "~/Views/Shared/_BuyerLayout.cshtml";
+}
+
+
+<link href="~/Content/materialize.css" rel="stylesheet" />
+<script src="~/scripts/jquery-1.10.2.js"></script>
+<h2 style="text-align:center">Order Details</h2>
+
+<br />
+<div class="row">
+    @foreach (var item in Model)
+    {
+        var image = Convert.ToBase64String(item.BinaryImage);
+        var src = "data:image/png;base64," + image;
+
+        <div class="col s2">
+            <div class="card">
+                <div class="card-image">
+                    <img src="@src" style="width:245px; height:170px;" /><br />
+                </div>
+
+
+                <div class="card-content">
+                    @Html.Label("Product Name:")
+                    @Html.Raw(item.ProductName)<br />
+                    @Html.Label("Product Description:")
+                    @Html.Raw(item.ProductDesc)<br />
+                    @Html.Label("Deliverd To:")
+                    @Html.Raw(item.OrderDelivryAddress)<br />
+                    @Html.Label("Total Amount:")
+                    @Html.Raw(item.Amount)<br />
+                    @Html.Label("Deliverd On:")
+                    @Html.Raw(item.OrderDeliveryDate.ToShortDateString())<br />
+                    @Html.Label("Delivered By:")
+                    @Html.Raw(item.ServiceName)<br />
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+    }
+
+</div>  

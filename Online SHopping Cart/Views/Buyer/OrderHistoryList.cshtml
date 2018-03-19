@@ -1,0 +1,46 @@
+﻿@model IEnumerable< Online_SHopping_Cart.Models.Order_Table >
+
+
+@{
+    ViewBag.Title = "OrderHistoryList";
+    Layout = "~/Views/Shared/_BuyerLayout.cshtml";
+}
+<style>
+    .wrapper{
+        margin-left: 550px;
+        width: 300px;
+        height: 400px;
+        text-align: center;
+    }
+</style>
+<h2>OrderHistory</h2>
+
+<div class="wrapper">
+    <table class="bordered responsive-table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderId)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderId)
+                    </td>
+
+                    <td>
+
+                        @Html.ActionLink("Details", "OrderHistoryDetails", new { id = item.OrderId })
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
